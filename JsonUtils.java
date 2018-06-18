@@ -14,54 +14,89 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonUtils {
-    //Constructor
-    public JsonUtils() throws JSONException {
-    }
+
 
     /*Method to parse objects of the sandwich_details.json file
     *returns a Sandwich object with parsed sandwich elements
     */
-    public static Sandwich parseSandwichJson(String sandwich_details) {
+    public static Sandwich parseSandwichJson(String json) {
+        //Non-Array fields
+        //String image;
+        //String placeOfOrigin;
+        //String description;
+/*
+        if(TextUtils.isEmpty(sandwich_detls)){
+            return null;            //Exit out if JSON String is empty, otherwise line32
+        }
+        Sandwich sandwich = null;    //Initialize an empty sandwich object
+*/
+      //  Parses the sandwichArray throwing and catching any possible exception due to the array
+        try{
+            JSONObject sandwichObject = new JSONObject(json);   //Creates a JSONObject
+            JSONObject Nome = sandwichObject.getJSONObject("name"); //Gets a specific key from the object
+            String mainName = Nome.getString("mainName");   //gets the value of specific key
+            JSONArray alsoKnownAsJsonArray = Nome.getJSONArray("alsoKnownAs"); //Gets the JsonArray with key name
+            List<String> alsoKnownAs = new ArrayList<>();
+            for(int i = 0; i < alsoKnownAsJsonArray.length(); i++) {
+                alsoKnownAs.add(alsoKnownAsJsonArray.getString(i));
+            }
+            String placeOfOrigin = sandwichObject.getString("placeOfOrigin");  //Gets place of origin's key value
+            String description = sandwichObject.getString("description");  //Gets description's key value
+            String image = sandwichObject.getString("image");  //Gets image's key value
+            JSONArray jsonIngredientsArray = sandwichObject.getJSONArray("ingredients");   //Stores all strings from ingredients' key
+            List<String> ingredients = new ArrayList<>();    //Stores previous array values into a List
+            for(int j = 0; j < jsonIngredientsArray.length(); j++){
+                ingredients.add(jsonIngredientsArray.getString(j));
+            }
+            return new Sandwich (image, mainName, placeOfOrigin, description, alsoKnownAs, ingredients);
+        }catch(JSONException except){
+            except.printStackTrace();
+            return null;
+        }
+    }
+}
+
+/*
         //Non-Array fields
         String image;
         String placeOfOrigin;
         String description;
-        if(TextUtils.isEmpty(sandwich_details)){
-            return null;            //Exit out if JSON String is empty
+        if(TextUtils.isEmpty(sandwich_detls)){
+            return null;            //Exit out if JSON String is empty, otherwise line32
         }
         Sandwich sandwich = null;    //Initialize an empty sandwich object
         /*
         Parses the sandwichArray throwing and catching any possible exception due to the array
          */
+/*
         try{
-            JSONObject sandwichObject = new JSONObject(sandwich_details);   //Creates a JSONObject
-            image = sandwichObject.getString("image");  //Gets image's key value
-            JSONObject name = sandwichObject.getJSONObject("name"); //Gets a specific key from the object
-            String mainName = name.getString("mainName");   //gets the value of specific key
+                JSONObject sandwichObject = new JSONObject(sandwich_detls);   //Creates a JSONObject
+                image = sandwichObject.getString("image");  //Gets image's key value
+                JSONObject name = sandwichObject.getJSONObject("name"); //Gets a specific key from the object
+                String mainName = name.getString("mainName");   //gets the value of specific key
+                placeOfOrigin = sandwichObject.getString("placeOfOrigin");  //Gets place of origin's key value
+                description = sandwichObject.getString("description");  //Gets description's key value
+                JSONArray alsoKnownAsJsonArray = name.getJSONArray("alsoKnownAs"); //Gets the JsonArray with key name
+                List<String> alsoKnownAs = jsonArrayToStringList(alsoKnownAsJsonArray); //Gets and converts JsonArray to a list of Strings with key value  alsoKnownAs
+        JSONArray ingredientsArray = sandwichObject.getJSONArray("ingredients");   //Stores all strings from ingredients' key
+        List<String> ingredients = jsonArrayToStringList(ingredientsArray);    //Stores previous array values into a List
 
-            placeOfOrigin = sandwichObject.getString("placeOfOrigin");  //Gets place of origin's key value
-            description = sandwichObject.getString("description");  //Gets description's key value
-            JSONArray alsoKnownAsJsonArray = name.getJSONArray("name"); //Gets the JsonArray with key name
-            List<String> alsoKnownAs = jsonArrayToStringList(alsoKnownAsJsonArray); //Gets and converts JsonArray to a list of Strings with key value  alsoKnownAs
-            JSONArray ingredientsArray = new getJSONArray("ingredients");   //Stores all strings from ingredients' key
-            List<String> ingredients = jsonArrayToStringList(ingredientsArray);    //Stores previous array values into a List
-
-            sandwich = new Sandwich(mainName, alsoKnownAs, placeOfOrigin, description, image, ingredients);
+        sandwich = new Sandwich(image, mainName, placeOfOrigin, description, alsoKnownAs, ingredients);
         }catch(JSONException e){
-            e.printStackTrace();
+        e.printStackTrace();
         }
         return sandwich;
-    }
-    private static List<String> jsonArrayToStringList(JSONArray jsonArray) throws JSONException{
+        }
+private static List<String> jsonArrayToStringList(JSONArray jsonArray) throws JSONException{
         List<String> allDetails = new ArrayList<>();
         for(int i = 0; i < jsonArray.length(); i++){
-            allDetails.add(jsonArray.getString(i));
+        allDetails.add(jsonArray.getString(i));
         }
         return allDetails;
-    }
-    //Inner getJSONArray class
-    private static class getJSONArray extends JSONArray {
-        public getJSONArray(String ingredients) {
         }
+//Inner getJSONArray class
+private static class getJSONArray extends JSONArray {
+    public getJSONArray(String ingredients) {
     }
 }
+ */
